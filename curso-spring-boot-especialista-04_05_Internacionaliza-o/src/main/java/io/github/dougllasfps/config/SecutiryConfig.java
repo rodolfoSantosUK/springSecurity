@@ -4,6 +4,7 @@ package io.github.dougllasfps.config;
 import io.github.dougllasfps.service.impl.UsuarioServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -28,7 +29,6 @@ public class SecutiryConfig extends WebSecurityConfigurerAdapter {
         auth.userDetailsService(usuarioService)
                 .passwordEncoder(passwordEncoder());
 
-        // super.configure(auth);
     }
 
     @Override
@@ -44,6 +44,9 @@ public class SecutiryConfig extends WebSecurityConfigurerAdapter {
                         .hasAnyRole("USER", "ADMIN")
                     .antMatchers("/api/pedidos/**")
                         .hasAnyRole("USER", "ADMIN")
+                    .antMatchers(HttpMethod.POST, "/api/usuario/**")
+                        .permitAll()
+                    .anyRequest().authenticated()
                 .and()
                     .httpBasic();
     }
