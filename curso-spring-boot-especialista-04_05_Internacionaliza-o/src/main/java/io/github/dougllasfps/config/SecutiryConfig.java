@@ -22,7 +22,7 @@ public class SecutiryConfig extends WebSecurityConfigurerAdapter {
         auth.inMemoryAuthentication()
                 .passwordEncoder(passwordEncoder())
                 .withUser("fulano")
-                .password(passwordEncoder().encode("123"))
+                .password(passwordEncoder().encode("1234"))
                 .roles("USER");
 
         // super.configure(auth);
@@ -30,6 +30,18 @@ public class SecutiryConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-        super.configure(http);
+
+        http
+                .csrf()
+                .disable()
+                .authorizeRequests()
+                    .antMatchers("/api/clientes/**")
+                        .hasAnyRole("USER", "ADMIN")
+                    .antMatchers("/api/produtos/**")
+                        .hasAnyRole("USER", "ADMIN")
+                    .antMatchers("/api/pedidos/**")
+                        .hasAnyRole("USER", "ADMIN")
+                .and()
+                    .httpBasic();
     }
 }
